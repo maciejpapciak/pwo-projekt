@@ -1,0 +1,3 @@
+mutation verify($token: String!) {
+  verify(uuidv4Token: $token)
+}

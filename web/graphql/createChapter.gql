@@ -1,0 +1,5 @@
+mutation createChapter($name: String!, $courseId: Int!, $index: Int!) {
+  createChapter(options: { courseId: $courseId, name: $name, index: $index }) {
+    id
+  }
+}

@@ -1,0 +1,7 @@
+query retrieveSubcategories {
+  retrieveSubcategories {
+    id
+    name
+    parentCategoryId
+  }
+}

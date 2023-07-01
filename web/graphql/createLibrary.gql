@@ -1,0 +1,19 @@
+mutation CreateLibrary(
+  $title: String!
+  $chapterId: Int!
+  $duration: NonNegativeFloat!
+  $path: String!
+) {
+  createLibrary(
+    options: {
+      title: $title
+      chapterId: $chapterId
+      duration: $duration
+      path: $path
+    }
+  ) {
+    id
+    title
+    path
+  }
+}

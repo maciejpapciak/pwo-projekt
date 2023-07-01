@@ -1,0 +1,6 @@
+query RetrieveTags {
+  RetrieveTags {
+    id
+    name
+  }
+}

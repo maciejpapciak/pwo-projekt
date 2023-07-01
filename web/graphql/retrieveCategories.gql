@@ -1,0 +1,6 @@
+query retrieveCategories {
+  retrieveCategories {
+    id
+    name
+  }
+}

@@ -1,0 +1,144 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialActions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AdvancementLevel {
+  id     Int      @id @default(autoincrement())
+  name   String   @unique @db.VarChar(255)
+  course Course[]
+
+  @@map("advancementLevel")
+}
+
+model Category {
+  id               Int        @id @default(autoincrement())
+  name             String     @unique @db.VarChar(60)
+  parentCategoryId Int?
+  category         Category?  @relation("categoryTocategory_parentCategoryId", fields: [parentCategoryId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  otherCategory    Category[] @relation("categoryTocategory_parentCategoryId")
+  course           Course[]
+
+  @@map("category")
+}
+
+model Chapter {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(128)
+  courseId Int       @map("course_id")
+  index    Int?
+  course   Course    @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  library  Library[]
+
+  @@map("chapter")
+}
+
+model Course {
+  id                 Int              @id @default(autoincrement())
+  title              String           @db.VarChar(128)
+  description        String
+  price              Decimal          @default(0) @db.Money
+  authorId           Int              @map("author_id")
+  categoryId         Int              @map("category_id")
+  advancementLevelId Int              @map("advancementLevel_id")
+  thumbnail          String?          @db.VarChar(255)
+  bulletPoints       Json?            @db.Json
+  stripeId           String?          @unique @map("stripe_id") @db.VarChar
+  advancementLevel   AdvancementLevel @relation(fields: [advancementLevelId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user               User             @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category           Category         @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  chapter            Chapter[]
+  courseTag          CourseTag[]
+  follow             Follow[]
+  order              Order[]          @relation("courseToorder")
+  rating             Rating[]         @relation("courseTorating")
+
+  @@map("course")
+}
+
+model CourseTag {
+  id       Int    @id @default(autoincrement())
+  courseId Int    @map("course_id")
+  tagId    Int    @map("tag_id")
+  course   Course @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tag      Tag    @relation(fields: [tagId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("courseTag")
+}
+
+model Follow {
+  id       Int    @id @default(autoincrement())
+  userId   Int    @map("user_id")
+  courseId Int    @map("course_id")
+  course   Course @relation(fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("follow")
+}
+
+model Library {
+  id        Int     @id @default(autoincrement())
+  title     String  @db.VarChar(128)
+  chapterId Int     @map("chapter_id")
+  duration  Float   @db.Real
+  path      String  @db.VarChar(255)
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("library")
+}
+
+model Rating {
+  id                          Int      @id @default(autoincrement())
+  amount                      Int
+  content                     String   @db.VarChar(255)
+  dateCreated                 DateTime @default(now()) @db.Timestamp(6)
+  senderId                    Int      @map("sender_id")
+  courseId                    Int      @map("course_id")
+  course                      Course   @relation("courseTorating", fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_rating_sender_idTouser User     @relation("rating_sender_idTouser", fields: [senderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("rating")
+}
+
+model Tag {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique @db.VarChar(60)
+  courseTag CourseTag[]
+
+  @@map("tag")
+}
+
+model User {
+  id                            Int      @id @default(autoincrement())
+  firstName                     String?  @db.VarChar(60)
+  lastName                      String?  @db.VarChar(60)
+  username                      String   @unique @db.VarChar(60)
+  email                         String   @unique @db.VarChar(60)
+  password                      String   @db.Char(95)
+  isEmailConfirmed              Boolean  @default(false)
+  dateCreated                   DateTime @default(now()) @db.Timestamp(6)
+  permissionLevel               Int      @default(1)
+  githubId                      BigInt?  @unique @map("githubid")
+  googleId                      String?  @unique @map("googleid") @db.VarChar(30)
+  course                        Course[]
+  follow                        Follow[]
+  order                         Order[]  @relation("orderTouser")
+  rating_rating_sender_idTouser Rating[] @relation("rating_sender_idTouser")
+
+  @@map("user")
+}
+
+model Order {
+  id       Int    @id @default(autoincrement())
+  courseId Int    @map("course_id")
+  userId   Int    @map("user_id")
+  course   Course @relation("courseToorder", fields: [courseId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user     User   @relation("orderTouser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("order")
+}

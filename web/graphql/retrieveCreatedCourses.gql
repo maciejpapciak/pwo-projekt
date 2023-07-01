@@ -1,0 +1,3 @@
+query retrieveCreatedCourses($id: Int!) {
+  retrieveCreatedCourses(id: $id)
+}

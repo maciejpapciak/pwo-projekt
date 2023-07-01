@@ -1,0 +1,21 @@
+mutation createCourse(
+  $title: String!
+  $description: String!
+  $price: Decimal!
+  $categoryId: Int!
+  $advancementLevelId: Int!
+  $thumbnail: String!
+) {
+  createCourse(
+    options: {
+      title: $title
+      description: $description
+      price: $price
+      categoryId: $categoryId
+      advancementLevelId: $advancementLevelId
+      thumbnail: $thumbnail
+    }
+  ) {
+    id
+  }
+}

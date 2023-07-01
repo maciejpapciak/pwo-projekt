@@ -1,0 +1,15 @@
+query filteredCourses(
+  $categoryId: Int!
+  $duration: Float
+  $rating: Float
+  $advancementLevel: Float
+) {
+  filteredCourses(
+    options: {
+      categoryId: $categoryId
+      duration: $duration
+      rating: $rating
+      advancementLevel: $advancementLevel
+    }
+  )
+}

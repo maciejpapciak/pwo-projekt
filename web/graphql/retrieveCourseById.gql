@@ -1,0 +1,3 @@
+query retrieveCourseById($id: Int!) {
+  retrieveCourseById(id: $id)
+}

@@ -1,0 +1,3 @@
+mutation upload($path: String!, $file: Upload!) {
+  uploadFile(path: $path, file: $file)
+}

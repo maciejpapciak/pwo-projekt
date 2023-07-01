@@ -1,0 +1,5 @@
+mutation createCourseTag($courseId: Int!, $tagId: Int!) {
+  createCourseTag(options: { courseId: $courseId, tagId: $tagId }) {
+    courseId
+  }
+}

@@ -1,0 +1,6 @@
+query retrieveAdvancementLevels {
+  retrieveAdvancementLevels {
+    id
+    name
+  }
+}

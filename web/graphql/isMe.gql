@@ -1,0 +1,8 @@
+mutation {
+  isMe {
+    id
+    email
+    username
+    permissionLevel
+  }
+}

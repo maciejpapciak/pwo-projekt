@@ -1,0 +1,10 @@
+query courses {
+  retrieveCourses {
+    id
+    title
+    description
+    price
+    authorId
+    categoryId
+  }
+}
